@@ -1,6 +1,6 @@
 # Rose-backend
 Smart Home "Rose" backend
-# Serveur node backend Chicky
+# Serveur node backend Rose
 Ce repo contient les fonctions a consommer par notre application Rose(Ios & Android)
 
 ## Construit avec
@@ -33,4 +33,5 @@ Ce repo contient les fonctions a consommer par notre application Rose(Ios & Andr
 - Maher Ali
 - Mohamed Jameleddine Bouassida
 - Wajih Jemai
-- 
+- Achref Talbi
+- Mohamed Majdi
