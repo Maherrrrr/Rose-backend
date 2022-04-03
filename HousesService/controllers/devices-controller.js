@@ -1,4 +1,4 @@
-let Device = require("./model");
+let Device = require("../models/devices-model");
 
 exports.get = async (req, res) => {
   res.send({ device: await Device.findById(req.body._id) });

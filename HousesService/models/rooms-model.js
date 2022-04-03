@@ -1,14 +1,17 @@
 const mongoose = require("mongoose")
 
-const HouseSchema = new mongoose.Schema(
+const RoomSchema = new mongoose.Schema(
   {
     name: { type: String },
     type: { type: String },
-    rooms: { type: [String] }
+    houseId: { type: String },
+   
+    
   },
   {
     timestamps: { currentTime: () => Date.now() },
   }
+  
 )
 
-module.exports = mongoose.model("House", HouseSchema)
+module.exports = mongoose.model("Room", RoomSchema)

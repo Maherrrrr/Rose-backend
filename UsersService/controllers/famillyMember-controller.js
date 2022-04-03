@@ -40,3 +40,4 @@ exports.deleteAll = async (req, res) => {
   res.send({ message: "All famillyMembers have been deleted" });
 };
 
+

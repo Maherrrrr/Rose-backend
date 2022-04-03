@@ -1,4 +1,4 @@
-let Room = require("./model");
+let Room = require("../models/rooms-model");
 
 exports.get = async (req, res) => {
   res.send({ room: await Room.findById(req.body._id) });
