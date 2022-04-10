@@ -7,7 +7,6 @@ const bodyParser = require("body-parser")
 
 const app = express()
 const port = process.env.PORT || 6000
-const controller = require("./controllers/houses-controller")
 
 // database
 mongoose.Promise = global.Promise
@@ -31,8 +30,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // ROUTES
-app.use("/houses", require("./routes/room-route"))
-app.use("/rooms", require("./routes/device-route"))
-app.use("/devices", require("./routes/house-root"))
+app.use("/houses", require("./routes/house-routes"))
+app.use("/rooms", require("./routes/room-routes"))
+app.use("/devices", require("./routes/device-routes"))
 
 app.listen(port, () => console.log(`Server up and running on port ${port} !`))
