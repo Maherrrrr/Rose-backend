@@ -4,9 +4,10 @@ const express = require("express")
 const morgan = require("morgan")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
+var cors = require('cors')
 
 const app = express()
-const port = process.env.PORT || 6000
+const port = process.env.PORT || 3000
 
 // database
 mongoose.Promise = global.Promise
@@ -28,6 +29,7 @@ mongoose
 app.use(morgan("dev"))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cors())
 
 // ROUTES
 app.use("/houses", require("./routes/house-routes"))
