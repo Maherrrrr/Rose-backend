@@ -51,6 +51,57 @@ exports.register = async (req, res) => {
   }
 };
 
+
+exports.registerguest = async (req, res) => {
+  console.log(req.body)
+  const {
+    email,
+    password,
+    firstname,
+    lastname,
+    birthdate,
+    gender,
+    pictureId,
+    isVerified,
+    role = "ROLE_USER",
+  } = req.body;
+
+    let i = 0 ; 
+    let famillyMember = await new FamillyMember({
+      email,
+      password: await bcrypt.hash(password, 10),
+      firstname,
+      lastname,
+      birthdate,
+      gender,
+      pictureId,
+      isVerified,
+      role,
+    }).save();
+
+    if (i==0) {
+      cron.schedule('* * * * *', async () =>  {
+        // const { name, type } = req.body;
+        let guest = await FamillyMember.findById(famillyMember.id);
+        if (famillyMember) {
+          await guest.remove();
+          return res.send({ message: "FamillyMembers" + guest._id + " have been deleted" });
+        } else {
+          return res.send({ message: "FamillyMember does not exist" });
+        }
+     
+         
+       console.log('Guest supprimè');
+     
+     });
+
+    }
+   
+
+   
+  
+};
+
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 

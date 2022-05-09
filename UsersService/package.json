@@ -25,8 +25,8 @@
     "nodemailer": "^6.7.0",
     "nodemon": "^2.0.14",
     "path": "^0.12.7",
-    "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.2.0",
+    "swagger-jsdoc": "^6.2.0",
+    "swagger-ui-express": "^4.3.0",
     "twig": "^1.15.4"
   }
 }

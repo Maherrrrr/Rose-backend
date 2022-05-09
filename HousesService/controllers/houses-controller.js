@@ -9,16 +9,16 @@ exports.getAll = async (req, res) => {
 };
 
 exports.add = async (req, res) => {
-  const { name, type, altitude, amplitude } = req.body;
-  let house = await new House({ name: name, type: type, altitude: altitude, amplitude: amplitude }).save();
+  const { name, type, altitude , amplitude   } = req.body;
+  let house = await new House({ name: name, type: type , altitude: altitude , amplitude: amplitude }).save();
   return res.send({ message: "House added successfully", house });
 };
 
 exports.update = async (req, res) => {
-  const { _id, name, type } = req.body;
+  const { _id, name, type  } = req.body;
   let house = await House.findById(_id);
   if (house) {
-    await house.update({ $set: { name: name, type: type, altitude: altitude, amplitude: amplitude } });
+    await house.update({ $set: { name: name, type: type , altitude :altitude ,  amplitude: amplitude    } });
     return res.send({ message: "House updated successfully" });
   } else {
     return res.send({ message: "House does not exist" });

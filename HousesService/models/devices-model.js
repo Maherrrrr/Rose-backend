@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const DeviceSchema = new mongoose.Schema(
   {
-    name: { type: String },
+    ledState: { type: String },
     type: { type: String },
     infraredCodes: [
       {
