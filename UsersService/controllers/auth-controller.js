@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const fs = require("fs");
+var cron = require('node-cron');
 
 exports.register = async (req, res) => {
   const {
@@ -55,37 +56,23 @@ exports.register = async (req, res) => {
 exports.registerguest = async (req, res) => {
   console.log(req.body)
   const {
-    email,
-    password,
-    firstname,
-    lastname,
-    birthdate,
-    gender,
-    pictureId,
-    isVerified,
-    role = "ROLE_USER",
+    
   } = req.body;
 
-    let i = 0 ; 
+   
     let famillyMember = await new FamillyMember({
-      email,
-      password: await bcrypt.hash(password, 10),
-      firstname,
-      lastname,
-      birthdate,
-      gender,
-      pictureId,
-      isVerified,
-      role,
+      firstname : "guest",
     }).save();
+   // let guest = await FamillyMember.findById(famillyMember.id);
+    res.send({ message: "FamillyMembers name " + famillyMember.firstname + " with id " + famillyMember._id })
 
-    if (i==0) {
+    
       cron.schedule('* * * * *', async () =>  {
         // const { name, type } = req.body;
-        let guest = await FamillyMember.findById(famillyMember.id);
+        console.log(famillyMember)
         if (famillyMember) {
-          await guest.remove();
-          return res.send({ message: "FamillyMembers" + guest._id + " have been deleted" });
+          await famillyMember.remove();
+          return res.send({ message: "FamillyMembers" + famillyMember._id + " have been deleted" });
         } else {
           return res.send({ message: "FamillyMember does not exist" });
         }
@@ -95,7 +82,7 @@ exports.registerguest = async (req, res) => {
      
      });
 
-    }
+    
    
 
    

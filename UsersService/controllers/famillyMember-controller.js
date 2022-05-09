@@ -1,7 +1,7 @@
 let FamillyMember = require("../models/FamillyMember");
 
 exports.get = async (req, res) => {
-  if (req.body) swaggerMetadata.params.body = {value: req.body};
+  
   console.log(req.body)
   res.send({ famillyMember: await FamillyMember.findById(req.body._id) });
 };
