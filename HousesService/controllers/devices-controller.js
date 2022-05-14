@@ -3,7 +3,7 @@ const SerialPort = require('serialport');
 const arduinoCOMPort = "COM6";
 
 exports.get = async (req, res) => {
-  res.send({ device: await Device.findById(req.body._id) });
+  res.send({ device: await Device.findById(req.params) });
 };
 
 exports.getAll = async (req, res) => {
@@ -54,52 +54,57 @@ exports.pairDevice = async (req, res) => {
           await device.infraredCodes.pull(existingIrCode)
           await device.save()
         }
-        await device.update({ $push: { infraredCodes: irCode } })
 
         arduinoSerialPort.close(() => {
           console.log('serial port closed');
         })
 
-        res.send("Saved raw code [" + irCode.value + "] for function " + req.body.function + " for the device " + device.name)
+        await device.update({ $push: { infraredCodes: irCode } })
+        return res.send("Saved raw code [" + irCode.value + "] for function " + req.body.function + " for the device " + device.name)
       }
     });
   });
 };
 
-
+var isSending = false
 exports.sendIrCode = async (req, res) => {
-  let device = await Device.findById(req.body.device_id)
+  if (!isSending) {
+    isSending = true;
 
-  var arduinoSerialPort = new SerialPort(arduinoCOMPort, {
-    baudRate: 9600
-  });
+    let device = await Device.findById(req.body.device_id)
 
-  arduinoSerialPort.on("open", () => {
-    console.log('serial port open');
-  })
+    var arduinoSerialPort = new SerialPort(arduinoCOMPort, {
+      baudRate: 9600
+    });
 
-  await sleep(2500)
-  console.log("Code sent")
-  arrayData = await device.infraredCodes.find(i => i.function === req.body.function).value
-  arduinoSerialPort.write(arrayData)
+    arduinoSerialPort.on("open", () => {
+      console.log('serial port open');
+    })
 
-  await sleep(2500)
+    arrayData = await device.infraredCodes.find(i => i.function === req.body.function).value
+    await sleep(2000)
+    arduinoSerialPort.write(arrayData)
+    console.log("Code sent")
 
-  const Readline = require('@serialport/parser-readline');
-  const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\n' }));
+    const Readline = require('@serialport/parser-readline');
+    const parser = arduinoSerialPort.pipe(new Readline({ delimiter: '\n' }));
+    
+    await sleep(500)
+    parser.on('data', data => {
+      console.log('-----------------------------------------------------------------------------------');
+      console.log(data)
+      console.log('-----------------------------------------------------------------------------------');
+    })
 
-  parser.on('data', data => {
-    console.log('-----------------------------------------------------------------------------------');
-    console.log(data)
-  })
-
-  await sleep(1000)
-  arduinoSerialPort.close(() => {
-    console.log('serial port closed');
-  })
-
-
-  res.send("Success")
+    await sleep(1000)
+    arduinoSerialPort.close(() => {
+      console.log('serial port closed');
+    })
+    isSending = false
+    res.send("Success")
+  } else {
+    console.log("Is still sending")
+  }
 }
 
 function sleep(ms) {
@@ -120,12 +125,13 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
+  console.log(req.body)
   let device = await Device.findById(req.body._id);
   if (device) {
     await device.remove();
     return res.send({ message: "Devices" + device._id + " have been deleted" });
   } else {
-    return res.send({ message: "Device does not exist" });
+    return res.status(404).send({ message: "Device does not exist" });
   }
 };
 

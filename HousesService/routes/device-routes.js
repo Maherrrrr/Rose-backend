@@ -7,6 +7,10 @@ router.route("/one")
   .post(controller.add)
   .put(controller.update)
   .delete(controller.delete)
+  
+
+router.route("/one/:_id")
+  .get(controller.get)
 
 router.route("/all").get(controller.getAll).delete(controller.deleteAll);
 
